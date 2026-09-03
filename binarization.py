@@ -17,6 +17,8 @@ cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 cam.set(cv2.CAP_PROP_FPS, 15)
 
+kernel = np.ones((2,2), np.uint8)
+
 
 while True:
     
@@ -32,6 +34,8 @@ while True:
     img2 = cv2.normalize(img, img_empty, 0, 255, cv2.NORM_MINMAX)
     greyscale = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
     img3 = cv2.adaptiveThreshold(greyscale, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 5)
+    dilate = cv2.erode(img3, kernel, iterations = 1)
+    
    # doesn't seem to help img4 = cv2.GaussianBlur(img3, (1, 1), 0)
 
     hImg, wImg, _ = img.shape
@@ -71,6 +75,8 @@ while True:
     cv2.imshow("Original", img)
     cv2.imshow("Thresh", img3)
     cv2.imshow("grey", greyscale)
+    cv2.imshow("dilate", dilate)
+    
 
     print("Thresh:"+text4)
     print("org:"+text)
