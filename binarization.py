@@ -44,28 +44,56 @@ while True:
 
     squares = img3
 
-    for b in boxes.splitlines():
-        b = b.split(' ')
-        print(b)
-        x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
-        cv2.rectangle(squares, (x, hImg - y), (w, hImg - h), (50,50,255),1)
-        cv2.putText(squares, b[0], (x,hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50,205,50), 1)
+    # for b in boxes.splitlines():
+    #     b = b.split(' ')
+    #     print(b)
+    #     x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+    #     cv2.rectangle(squares, (x, hImg - y), (w, hImg - h), (50,50,255),1)
+    #     cv2.putText(squares, b[0], (x,hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50,205,50), 1)
 
 #checking org to debug 
-    orgB = pytesseract.image_to_boxes(img)
+    # orgB = pytesseract.image_to_boxes(img)
 
-    orgSquares = img
+    # orgSquares = img
 
-    for b in orgB.splitlines():
+    # for b in orgB.splitlines():
+    #         b = b.split(' ')
+    #        # print(b)
+    #         x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
+    #         cv2.rectangle(orgSquares, (x, hImg - y), (w, hImg - h), (50,50,255),1)
+    #         cv2.putText(orgSquares, b[0], (x,hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50,205,50), 1)
+
+# testing dilate 
+    dilateB = pytesseract.image_to_boxes(dilate)
+    bestX = int(0)
+    bestY = int(0)
+    bestW = int(0)
+    bestH = int(0)
+
+    for b in dilateB.splitlines():
             b = b.split(' ')
             print(b)
             x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
-            cv2.rectangle(orgSquares, (x, hImg - y), (w, hImg - h), (50,50,255),1)
-            cv2.putText(orgSquares, b[0], (x,hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50,205,50), 1)
+            cv2.rectangle(dilate, (x, hImg - y), (w, hImg - h), (50,50,255),1)
+            cv2.putText(dilate, b[0], (x,hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50,205,50), 1)
+            if bestX < x:
+                  bestX = x
+                  print(bestX)
+            if bestY < y:
+                    bestY = y
+                    print(bestY)
+            if bestW < w:
+                    bestW = w
+                    print(bestW)
+            if bestH < h:
+                    bestH = h
+                    print(bestH)
+    cv2.rectangle(dilate, (bestX, hImg - bestY), (bestW, hImg - bestH), (50,50,255),1)
 
     
     text4 = pytesseract.image_to_boxes(img3)
     text = pytesseract.image_to_boxes(img)
+    #debug = pytesseract.image_to_data(dilate)
   
 
 
@@ -78,8 +106,9 @@ while True:
     cv2.imshow("dilate", dilate)
     
 
-    print("Thresh:"+text4)
-    print("org:"+text)
+    #print("Thresh:"+text4)
+    #print("org:"+text)
+    #print("debug:"+debug)
     
 
 
