@@ -18,7 +18,7 @@ cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 cam.set(cv2.CAP_PROP_FPS, 15)
 
 kernel = np.ones((2,2), np.uint8)
-
+list = []
 
 while True:
     
@@ -34,8 +34,9 @@ while True:
     img2 = cv2.normalize(img, img_empty, 0, 255, cv2.NORM_MINMAX)
     greyscale = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
     img3 = cv2.adaptiveThreshold(greyscale, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 5)
-    dilate = cv2.erode(img3, kernel, iterations = 1)
-    color = cv2.cvtColor(dilate, cv2.COLOR_GRAY2BGR) #to debug better
+    
+    erode = cv2.erode(img3, kernel, iterations = 1)
+    color = cv2.cvtColor(erode, cv2.COLOR_GRAY2BGR) #to debug better
     
    # doesn't seem to help img4 = cv2.GaussianBlur(img3, (1, 1), 0)
 
@@ -64,14 +65,16 @@ while True:
     #         cv2.rectangle(orgSquares, (x, hImg - y), (w, hImg - h), (50,50,255),1)
     #         cv2.putText(orgSquares, b[0], (x,hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50,205,50), 1)
 
-# testing dilate 
-    dilateB = pytesseract.image_to_boxes(dilate)
+# testing erode 
+    erodeB = pytesseract.image_to_boxes(erode)
     bestX = int(0)
     bestY = int(0)
     bestW = int(0)
     bestH = int(0)
 
-    for b in dilateB.splitlines():
+    
+
+    for b in erodeB.splitlines():
             b = b.split(' ')
         #     print(b)
             x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
@@ -91,12 +94,15 @@ while True:
             if bestH > (hImg - h):
                     bestH = (hImg - h)
                     # print(bestH)
+            middle = x,y
+            list.append(middle)
     cv2.rectangle(color, (bestX, bestY), (bestW, bestH), (255,150,0),2)
-
     
-    text4 = pytesseract.image_to_boxes(img3)
-    text = pytesseract.image_to_boxes(img)
-    debug = pytesseract.image_to_boxes(dilate)
+    print("list:", list)
+    
+    # text4 = pytesseract.image_to_boxes(img3)
+    # text = pytesseract.image_to_boxes(img)
+    # debug = pytesseract.image_to_boxes(erode)
 
     
 
@@ -110,13 +116,14 @@ while True:
     # cv2.imshow("Original", img)
     # cv2.imshow("Thresh", img3)
     # cv2.imshow("grey", greyscale)
-    # cv2.imshow("dilate", dilate)
+    # cv2.imshow("erode", erode)
     cv2.imshow("color2", color)
+    list = []
 
 
     #print("Thresh:"+text4)
     #print("org:"+text)
-    print("debug:"+debug)
+    # print("debug:"+debug)
     
 
 
