@@ -9,6 +9,8 @@ import pytesseract
 import cv2
 import os, sys, inspect #For dynamic filepaths
 import numpy as np;
+import math
+import itertools
 
 
 
@@ -98,7 +100,23 @@ while True:
             list.append(middle)
     cv2.rectangle(color, (bestX, bestY), (bestW, bestH), (255,150,0),2)
     
-    print("list:", list)
+    # print("list:", list)
+    for a, b in itertools.combinations(list, 2):
+        # print("a:",a,"b:",b)
+        print(a)
+        x1,y1 = int(a[0]),int(a[1])
+        x2,y2 = int(b[0]),int(b[1])
+
+        if (abs(x1 - x2) >= 20 and abs(y1 - y2) >= 20):
+            sameWord = True
+            list1 = [a,b]
+            for i in list:
+                  
+
+            
+                
+               
+           
     
     # text4 = pytesseract.image_to_boxes(img3)
     # text = pytesseract.image_to_boxes(img)
