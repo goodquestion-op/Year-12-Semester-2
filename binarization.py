@@ -23,8 +23,8 @@ kernel = np.ones((2,2), np.uint8)
 list = []
 
 while True:
-    
-
+    # look_up = input("input:")
+    # print({look_up})
     check, frame = cam.read()
 
 
@@ -45,7 +45,7 @@ while True:
     hImg, wImg, _ = img.shape
 
     boxes = pytesseract.image_to_boxes(img3)
-
+    # print(boxes)
     squares = img3
 
     # for b in boxes.splitlines():
@@ -98,19 +98,18 @@ while True:
                     # print(bestH)
             middle = x,y
             list.append(middle)
-    cv2.rectangle(color, (bestX, bestY), (bestW, bestH), (255,150,0),2)
-    
+  #  cv2.rectangle(color, (bestX, bestY), (bestW, bestH), (255,150,0),2)
+     
     # print("list:", list)
     for a, b in itertools.combinations(list, 2):
         # print("a:",a,"b:",b)
-        print(a)
+        # print(a)
         x1,y1 = int(a[0]),int(a[1])
         x2,y2 = int(b[0]),int(b[1])
 
         if (abs(x1 - x2) >= 20 and abs(y1 - y2) >= 20):
             sameWord = True
-            list1 = [a,b]
-            for i in list:
+            # print("found")
                   
 
             
