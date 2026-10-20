@@ -8,6 +8,7 @@ import math
 import itertools
 import asyncio
 from sshkeyboard import listen_keyboard, stop_listening
+import threading 
 
 
 
@@ -21,14 +22,14 @@ cam.set(cv2.CAP_PROP_FPS, 15)
 kernel = np.ones((2,2), np.uint8)
 list = []
 
-async def press(key):
+def press(key):
     print(f"'{key}' pressed")
-    await asyncio.sleep(3)
+    
     print(f"'{key}' slept")
     stop_listening()
     return
 
-async def camera(color,img,img3,erode,img_empty):
+def camera(color,img,img3,erode,img_empty):
       check, frame = cam.read()
       img = cv2.resize(frame,(320,240))
       img_empty = np.zeros((img.shape[0], img.shape[1]))
@@ -37,16 +38,21 @@ async def camera(color,img,img3,erode,img_empty):
       img3 = cv2.adaptiveThreshold(greyscale, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 5)  
       erode = cv2.erode(img3, kernel, iterations = 1)
       color = cv2.cvtColor(erode, cv2.COLOR_GRAY2BGR)
-      return color,img,img3,erode,img_empty
-async def main():
-      key = asyncio.create_task()
+
+      hImg, wImg, _ = img.shape
+
+      boxes = pytesseract.image_to_boxes(img3)
       
-asyncio.run(main())
+      return color,img,img3,erode,img_empty
+
+t1 = threading.Thread(target = camera)
+      
 
 while True:
+
     # listen_keyboard(on_press=press)
 
-    camera(color,img,img3,erode,img_empty)
+    t1.start()
 
     # look_up = input("input:")
     # print({look_up})
@@ -63,9 +69,6 @@ while True:
     
    # doesn't seem to help img4 = cv2.GaussianBlur(img3, (1, 1), 0)
 
-    hImg, wImg, _ = img.shape
-
-    boxes = pytesseract.image_to_boxes(img3)
     # print(boxes)
     squares = img3
 
