@@ -1,5 +1,5 @@
 from PIL import Image
-import pytesseract
+import easyocr
 import cv2
 import os, sys, inspect #For dynamic filepaths
 import numpy as np;
@@ -17,6 +17,8 @@ cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 cam.set(cv2.CAP_PROP_FPS, 15)
 
+reader = easyocr.Reader(['en'])
+kernel = np.ones((2,2), np.uint8)
 
 while True:
     
@@ -25,40 +27,35 @@ while True:
 
 
 
-    img = cv2.resize(frame,(320,240))
+    
 
    
+    img = cv2.resize(frame,(320,240))
     img_empty = np.zeros((img.shape[0], img.shape[1]))
     img2 = cv2.normalize(img, img_empty, 0, 255, cv2.NORM_MINMAX)
-    img3 = cv2.threshold(img2, 100, 255, cv2.THRESH_BINARY)[1]
-    img4 = cv2.GaussianBlur(img3, (1, 1), 0)
+    greyscale = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    img3 = cv2.adaptiveThreshold(greyscale, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 5, 5)  
+    erode = cv2.erode(img3, kernel, iterations = 1)
+    color = cv2.cvtColor(erode, cv2.COLOR_GRAY2BGR)
 
     hImg, wImg, _ = img.shape
 
-    boxes = pytesseract.image_to_boxes(img4)
-
-    for b in boxes.splitlines():
-        b = b.split(' ')
-        print(b)
-        x, y, w, h = int(b[1]), int(b[2]), int(b[3]), int(b[4])
-        cv2.rectangle(img, (x, hImg - y), (w, hImg - h), (50,50,255),1)
-        cv2.putText(img, b[0], (x,hImg - y + 13), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (50,205,50), 1)
 
     
-    text4 = pytesseract.image_to_boxes(img4)
+    
 
   
 
-
+    result = reader.readtext(color)
 
     # Output
 
     cv2.imshow("Original", img)
   
-    cv2.imshow("Blurred", img4)
+    cv2.imshow("Blurred",color)
 
     
-    print("Blur:"+text4)
+    print("Blur:",color)
     
 
 
