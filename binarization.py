@@ -9,6 +9,7 @@ import itertools
 import asyncio
 from sshkeyboard import listen_keyboard, stop_listening
 import threading 
+import easyocr 
 
 
 
@@ -42,6 +43,8 @@ def camera(color,img,img3,erode,img_empty):
       hImg, wImg, _ = img.shape
 
       boxes = pytesseract.image_to_boxes(img3)
+
+      
       
       return color,img,img3,erode,img_empty
 
