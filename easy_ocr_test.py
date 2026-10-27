@@ -5,7 +5,6 @@ import os, sys, inspect #For dynamic filepaths
 import numpy as np;
 
 
-import pytesseract
 import cv2
 import os, sys, inspect #For dynamic filepaths
 import numpy as np;
@@ -39,6 +38,15 @@ while True:
     color = cv2.cvtColor(erode, cv2.COLOR_GRAY2BGR)
 
     hImg, wImg, _ = img.shape
+    result = reader.readtext(color)
+    if not result == None:
+        bingus = str(result)
+        split = bingus.split()
+        print(split[0])
+       
+    
+
+    
 
 
     
@@ -46,7 +54,7 @@ while True:
 
   
 
-    result = reader.readtext(color)
+    
 
     # Output
 
@@ -55,9 +63,9 @@ while True:
     cv2.imshow("Blurred",color)
 
     
-    print("Blur:",color)
-    
-
+    # print("easyocr:", result)
+    # array = np.array()
+ 
 
     
 
