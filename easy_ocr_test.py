@@ -46,15 +46,17 @@ while True:
         # print(x1)
     
         for r in result:
-            print(r)
-            bbox, result, score = r
-            x1 = bbox[0][0]
-            y1 = bbox[0][1]
-            x2 = bbox[2][0]
-            y2 = bbox[2][1]
+             if r[2] > 0.5:
+                print(r[2])
+                print(result)
+                bbox, result, score = r
+                x1 = bbox[0][0]
+                y1 = bbox[0][1]
+                x2 = bbox[2][0]
+                y2 = bbox[2][1]
 
-            cv2.rectangle(color, (int(x1),int(y1)),(int(x2),int(y2)),(0,255,0),2)
-            cv2.putText(color, result,(int(x1),int(y1)), cv2.FONT_HERSHEY_COMPLEX, 1, (255,0,0),2)
+                cv2.rectangle(color, (int(x1),int(y1)),(int(x2),int(y2)),(0,255,0),2)
+                cv2.putText(color, result,(int(x1),int(y1)), cv2.FONT_HERSHEY_COMPLEX, 1, (255,0,0),2)
             
 
 
