@@ -3,11 +3,7 @@ import easyocr
 import cv2
 import os, sys, inspect #For dynamic filepaths
 import numpy as np;
-
-
-import cv2
-import os, sys, inspect #For dynamic filepaths
-import numpy as np;
+import re
 
 
 
@@ -16,7 +12,7 @@ cam.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
 cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 cam.set(cv2.CAP_PROP_FPS, 15)
 
-reader = easyocr.Reader(['en'])
+reader = easyocr.Reader(['en'], gpu = True)
 kernel = np.ones((2,2), np.uint8)
 
 while True:
@@ -42,9 +38,25 @@ while True:
     if not result == None:
         bingus = str(result)
         split = bingus.split()
-        print(split[0])
-       
+        
+        # print(split[0])
+        # x1 = re.findall(r'\d+',split[0])
+
+        # x1 = split[0].isdigit()
+        # print(x1)
     
+        for r in result:
+            print(r)
+            bbox, result, score = r
+            x1 = bbox[0][0]
+            y1 = bbox[0][1]
+            x2 = bbox[2][0]
+            y2 = bbox[2][1]
+
+            cv2.rectangle(color, (int(x1),int(y1)),(int(x2),int(y2)),(0,255,0),2)
+            cv2.putText(color, result,(int(x1),int(y1)), cv2.FONT_HERSHEY_COMPLEX, 1, (255,0,0),2)
+            
+
 
     
 
